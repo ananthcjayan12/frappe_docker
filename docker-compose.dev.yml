@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  backend:
+    # Override the production backend for development
+    image: frappe/erpnext:v15.64.1
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+      - ./custom_apps:/home/frappe/frappe-bench/apps-dev:cached
+      - ./development:/workspace:cached
+    environment:
+      - SHELL=/bin/bash
+      - DEVELOPER_MODE=1
+    command: sleep infinity
+    ports:
+      - "8000:8000"  # Direct access to backend
+      - "8080:8080"  # Additional port for debugging
+    networks:
+      - frappe_network
+
+  # Development tools container
+  dev-tools:
+    image: frappe/erpnext:v15.64.1
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+      - ./custom_apps:/home/frappe/frappe-bench/apps-dev:cached
+      - ./development:/workspace:cached
+    working_dir: /home/frappe/frappe-bench
+    command: sleep infinity
+    environment:
+      - SHELL=/bin/bash
+      - DB_HOST=db
+      - DB_PORT=3306
+      - REDIS_CACHE=redis-cache:6379
+      - REDIS_QUEUE=redis-queue:6379
+    networks:
+      - frappe_network
+    depends_on:
+      - db
+      - redis-cache
+      - redis-queue
+
+volumes:
+  sites:
+    external: true
+    name: frappe_docker_sites
+  logs:
+    external: true  
+    name: frappe_docker_logs
+
+networks:
+  frappe_network:
+    external: true
+    name: frappe_docker_frappe_network 

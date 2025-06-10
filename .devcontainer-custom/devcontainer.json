@@ -1,0 +1,35 @@
+{
+  "name": "Frappe Development (Custom)",
+  "dockerComposeFile": ["../pwd.yml", "../docker-compose.dev.yml"],
+  "service": "dev-tools",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "none",
+  "forwardPorts": [8000, 8080, 8090, 9000],
+  "remoteUser": "frappe",
+  "postCreateCommand": "echo 'Development environment ready!'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-vscode.live-server",
+        "mtxr.sqltools",
+        "visualstudioexptteam.vscodeintellicode",
+        "ms-python.flake8",
+        "ms-python.black-formatter"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.terminal.activateEnvironment": false,
+        "debug.node.autoAttach": "disabled",
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black"
+      }
+    }
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder}/custom_apps,target=/home/frappe/frappe-bench/apps-dev,type=bind,consistency=cached"
+  ]
+} 
