@@ -130,7 +130,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
     ports:
-      - "8095:8080"
+      - "8096:8080"
 
   # Frontend for Tenant 2
   frontend-tenant2:
@@ -157,7 +157,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
     ports:
-      - "8096:8080"
+      - "8097:8080"
 
   # Frontend for Tenant 3
   frontend-tenant3:
@@ -184,7 +184,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
     ports:
-      - "8097:8080"
+      - "8098:8080"
 
   queue-long:
     image: frappe/erpnext:v15.64.1
