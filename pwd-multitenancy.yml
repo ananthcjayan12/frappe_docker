@@ -77,15 +77,11 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        echo "Creating first site: tenant1.localhost";
+        echo "Creating tenant sites...";
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext tenant1.localhost;
-        echo "Creating second site: tenant2.localhost";
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext tenant2.localhost;
-        echo "Creating third site: tenant3.localhost";
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext tenant3.localhost;
-        echo "Setting default site to tenant1.localhost";
-        bench --site tenant1.localhost set-config dns_multitenant 1;
-        bench use tenant1.localhost;
+        echo "All tenant sites created successfully";
 
   db:
     image: mariadb:10.6
@@ -109,7 +105,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
-  frontend:
+  # Frontend for Tenant 1
+  frontend-tenant1:
     image: frappe/erpnext:v15.64.1
     networks:
       - frappe_network
@@ -122,7 +119,7 @@ services:
       - nginx-entrypoint.sh
     environment:
       BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: $$host
+      FRAPPE_SITE_NAME_HEADER: tenant1.localhost
       SOCKETIO: websocket:9000
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
@@ -134,8 +131,60 @@ services:
       - logs:/home/frappe/frappe-bench/logs
     ports:
       - "8095:8080"
-      - "8096:8080"  # Additional port for load balancing
-      - "8097:8080"  # Additional port for load balancing
+
+  # Frontend for Tenant 2
+  frontend-tenant2:
+    image: frappe/erpnext:v15.64.1
+    networks:
+      - frappe_network
+    depends_on:
+      - websocket
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command:
+      - nginx-entrypoint.sh
+    environment:
+      BACKEND: backend:8000
+      FRAPPE_SITE_NAME_HEADER: tenant2.localhost
+      SOCKETIO: websocket:9000
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMEOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+    ports:
+      - "8096:8080"
+
+  # Frontend for Tenant 3
+  frontend-tenant3:
+    image: frappe/erpnext:v15.64.1
+    networks:
+      - frappe_network
+    depends_on:
+      - websocket
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command:
+      - nginx-entrypoint.sh
+    environment:
+      BACKEND: backend:8000
+      FRAPPE_SITE_NAME_HEADER: tenant3.localhost
+      SOCKETIO: websocket:9000
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMEOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+    ports:
+      - "8097:8080"
 
   queue-long:
     image: frappe/erpnext:v15.64.1
@@ -223,4 +272,4 @@ volumes:
 
 networks:
   frappe_network:
-    driver: bridge
+    driver: bridge 
