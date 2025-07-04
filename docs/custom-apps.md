@@ -7,6 +7,14 @@ Create the following `apps.json` file:
 ```json
 [
   {
+    "url": "https://github.com/ananthcjayan12/dentcharts.git",
+    "branch": "develop"
+  },
+  {
+    "url": "https://github.com/frappe/healthcare",
+    "branch": "version-15-hotfix"
+  },
+  {
     "url": "https://github.com/frappe/erpnext",
     "branch": "version-15"
   },
