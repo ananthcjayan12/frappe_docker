@@ -48,7 +48,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CR_PAT }}
       - name: Pull cache image if available
         run: |
           docker pull ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} || echo "No cache image found"
