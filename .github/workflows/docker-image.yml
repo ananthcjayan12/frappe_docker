@@ -46,17 +46,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull cache image if available
+        run: |
+          docker pull ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} || echo "No cache image found"
+
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: images/layered/Containerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
-          build-args: |
-            FRAPPE_PATH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_path || 'https://github.com/frappe/frappe' }}
-            FRAPPE_BRANCH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_branch || 'version-15' }}
-            APPS_JSON_BASE64=${{ steps.encode_apps.outputs.apps_json_base64 }}
-          tags: |
-            ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }}
-            ghcr.io/ananthcjayan12/frappe-custom:latest 
+        run: |
+          docker build \
+            --file images/layered/Containerfile \
+            --cache-from ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} \
+            --build-arg FRAPPE_PATH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_path || 'https://github.com/frappe/frappe' }} \
+            --build-arg FRAPPE_BRANCH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_branch || 'version-15' }} \
+            --build-arg APPS_JSON_BASE64="${{ steps.encode_apps.outputs.apps_json_base64 }}" \
+            --tag ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} \
+            .
+
+          docker push ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }}
+          docker tag ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} ghcr.io/ananthcjayan12/frappe-custom:latest
+          docker push ghcr.io/ananthcjayan12/frappe-custom:latest 

@@ -22,11 +22,6 @@ on:
         required: true
         type: string
         description: NodeJS Version
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
 
 jobs:
   build:
@@ -88,10 +83,11 @@ jobs:
 
       - name: Login
         if: ${{ inputs.push }}
-        uses: docker/login-action@v3
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push
         if: ${{ inputs.push }}
