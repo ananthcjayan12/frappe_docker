@@ -1,3 +1,4 @@
+ARG CACHEBUST
 ARG FRAPPE_BRANCH=version-15
 
 FROM frappe/build:${FRAPPE_BRANCH} AS builder

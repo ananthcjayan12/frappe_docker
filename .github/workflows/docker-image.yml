@@ -58,6 +58,7 @@ jobs:
           docker build \
             --file images/layered/Containerfile \
             --cache-from ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} \
+            --build-arg CACHEBUST=${{ github.run_id }} \
             --build-arg FRAPPE_PATH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_path || 'https://github.com/frappe/frappe' }} \
             --build-arg FRAPPE_BRANCH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_branch || 'version-15' }} \
             --build-arg APPS_JSON_BASE64="${{ steps.encode_apps.outputs.apps_json_base64 }}" \
