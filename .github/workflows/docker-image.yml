@@ -65,4 +65,13 @@ jobs:
             --tag ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} \
             .
 
-          docker push ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} 
+          docker push ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }}
+      - name: Commit pwd.yml update
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          sed -i "s/\${IMAGE_TAG}/${IMAGE_TAG}/g" pwd.yml
+          git add pwd.yml
+          git commit -m "ci: update pwd.yml to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
+          git pull --rebase
+          git push origin main 
