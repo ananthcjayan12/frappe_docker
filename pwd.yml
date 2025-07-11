@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -16,9 +16,19 @@ services:
       DB_PORT: "3306"
       MYSQL_ROOT_PASSWORD: admin
       MARIADB_ROOT_PASSWORD: admin
+    entrypoint:
+      - bash
+      - -c
+    command:
+      - >
+        bench --site frontend migrate &&
+        bench --site frontend build &&
+        exec /home/frappe/frappe-bench/env/bin/gunicorn --chdir=/home/frappe/frappe-bench/sites \
+          --bind=0.0.0.0:8000 --threads=4 --workers=2 --worker-class=gthread \
+          --worker-tmp-dir=/dev/shm --timeout=120 --preload frappe.app:application
 
   configurator:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -47,7 +57,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -102,7 +112,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     depends_on:
@@ -128,7 +138,7 @@ services:
       - "8300:8080"
 
   queue-long:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -144,7 +154,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -178,7 +188,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
@@ -192,7 +202,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: ghcr.io/ananthcjayan12/frappe-custom:v19
+    image: ghcr.io/ananthcjayan12/frappe-custom:v20
     networks:
       - frappe_network
     deploy:
