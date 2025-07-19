@@ -111,39 +111,45 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: frappe/erpnext:v15.64.1
-    networks:
-      - frappe_network
-    depends_on:
-      - websocket
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 5
-        window: 120s
-    command:
-      - nginx-entrypoint.sh
-    environment:
-      BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: frontend
-      SOCKETIO: websocket:9000
-      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
-      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
-      UPSTREAM_REAL_IP_RECURSIVE: "off"
-      PROXY_READ_TIMEOUT: 300
-      CLIENT_MAX_BODY_SIZE: 50m
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/method/ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - logs:/home/frappe/frappe-bench/logs
-    ports:
-      - "8021:8080"
+      image: frappe/erpnext:v15.64.1
+      networks:
+        - frappe_network
+      depends_on:
+        - websocket
+      restart: unless-stopped  # Use this instead of deploy.restart_policy
+      command:
+        - nginx-entrypoint.sh
+      environment:
+        BACKEND: backend:8000
+        FRAPPE_SITE_NAME_HEADER: frontend
+        SOCKETIO: websocket:9000
+        UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+        UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+        UPSTREAM_REAL_IP_RECURSIVE: "off"
+        PROXY_READ_TIMEOUT: 300
+        CLIENT_MAX_BODY_SIZE: 50m
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8080/api/method/ping"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+      volumes:
+        - sites:/home/frappe/frappe-bench/sites
+        - logs:/home/frappe/frappe-bench/logs
+        # Add tmpfs for nginx PID file
+        - type: tmpfs
+          target: /run
+          tmpfs:
+            size: 100m
+        - type: tmpfs
+          target: /var/cache/nginx
+          tmpfs:
+            size: 100m
+      ports:
+        - "8021:8080"
+      # Run as root to avoid permission issues
+      user: "0:0"
 
   queue-long:
     image: frappe/erpnext:v15.64.1
