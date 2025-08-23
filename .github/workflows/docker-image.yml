@@ -33,12 +33,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Get latest dentcharts commit hash
-        id: dentcharts_hash
+      - name: Get latest rentalgenie commit hash
+        id: rentalgenie_hash
         run: |
-          DENTCHARTS_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/dentcharts/commits/develop | jq -r .sha)
-          echo "dentcharts_hash=${DENTCHARTS_HASH}" >> $GITHUB_OUTPUT
-          echo "Latest dentcharts commit: ${DENTCHARTS_HASH}"
+          RENTALGENIE_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/rentalgenie/commits/develop | jq -r .sha)
+          echo "rentalgenie_hash=${RENTALGENIE_HASH}" >> $GITHUB_OUTPUT
+          echo "Latest rentalgenie commit: ${RENTALGENIE_HASH}"
       - name: Encode apps.json
         id: encode_apps
         run: |
@@ -64,7 +64,7 @@ jobs:
           docker build \
             --file images/layered/Containerfile \
             --cache-from ghcr.io/ananthcjayan12/frappe-custom:${{ env.IMAGE_TAG }} \
-            --build-arg CACHEBUST=${{ github.run_id }}-${{ steps.dentcharts_hash.outputs.dentcharts_hash }} \
+            --build-arg CACHEBUST=${{ github.run_id }}-${{ steps.rentalgenie_hash.outputs.rentalgenie_hash }} \
             --build-arg FRAPPE_PATH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_path || 'https://github.com/frappe/frappe' }} \
             --build-arg FRAPPE_BRANCH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_branch || 'version-15' }} \
             --build-arg APPS_JSON_BASE64="${{ steps.encode_apps.outputs.apps_json_base64 }}" \
