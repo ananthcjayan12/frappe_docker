@@ -21,7 +21,7 @@ on:
   push:
     branches:
       - main
-      - br-v5
+      - BR-DOCKER-PUSH-RENTAL
     tags:
       - 'v*'
 
