@@ -1,8 +1,5 @@
 [
-    {
-      "url": "https://github.com/ananthcjayan12/rentalgenie.git",
-      "branch": "develop"
-    },
+ 
 
     {
       "url": "https://github.com/frappe/erpnext",
@@ -15,6 +12,10 @@
     {
       "url": "https://github.com/frappe/print_designer",
       "branch": "develop"
+    },
+    {
+      "url": "https://github.com/ananthcjayan12/rentalgenie.git",
+      "branch": "v1"
     }
 
   ]
