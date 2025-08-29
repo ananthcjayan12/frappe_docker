@@ -2,12 +2,21 @@ version: "3"
 
 services:
   backend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/method/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -18,7 +27,7 @@ services:
       MARIADB_ROOT_PASSWORD: admin
 
   configurator:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
@@ -47,7 +56,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
@@ -102,14 +111,12 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     depends_on:
       - websocket
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: unless-stopped  # Use this instead of deploy.restart_policy
     command:
       - nginx-entrypoint.sh
     environment:
@@ -119,16 +126,33 @@ services:
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
-      PROXY_READ_TIMEOUT: 120
+      PROXY_READ_TIMEOUT: 300
       CLIENT_MAX_BODY_SIZE: 50m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/method/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+      # Add tmpfs for nginx PID file
+      - type: tmpfs
+        target: /run
+        tmpfs:
+          size: 100m
+      - type: tmpfs
+        target: /var/cache/nginx
+        tmpfs:
+          size: 100m
     ports:
       - "8301:8080"
+    # Run as root to avoid permission issues
+    user: "0:0"
 
   queue-long:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
@@ -144,7 +168,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
@@ -178,7 +202,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
@@ -192,12 +216,21 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v36
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v37
     networks:
       - frappe_network
     deploy:
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/socket.io/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
