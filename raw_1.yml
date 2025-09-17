@@ -35,13 +35,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
     container_name: backend-hcok8w8wwow4c008o0k8wg4g-055359824335
@@ -73,8 +73,8 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: '3306'
-      REDIS_CACHE: 'redis-cache:6379'
-      REDIS_QUEUE: 'redis-queue:6379'
+      REDIS_CACHE: 'redis_cache:6379'
+      REDIS_QUEUE: 'redis_queue:6379'
       SOCKETIO_PORT: '9000'
       COOLIFY_BRANCH: '"BR-DOCKER-PUSH-RENTAL"'
       COOLIFY_RESOURCE_UUID: hcok8w8wwow4c008o0k8wg4g
@@ -83,13 +83,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
     volumes:
@@ -123,7 +123,7 @@ services:
       - bash
       - '-c'
     command:
-      - "wait-for-it -t 120 db:3306; wait-for-it -t 120 redis-cache:6379; wait-for-it -t 120 redis-queue:6379; export start=`date +%s`; until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".db_host // empty\"` ]] && \\\n  [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".redis_cache // empty\"` ]] && \\\n  [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".redis_queue // empty\"` ]];\ndo\n  echo \"Waiting for sites/common_site_config.json to be created\";\n  sleep 5;\n  if (( `date +%s`-start > 120 )); then\n    echo \"could not find sites/common_site_config.json with required keys\";\n    exit 1\n  fi\ndone; echo \"sites/common_site_config.json found\"; bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app rental_management  --install-app print_designer --set-default frontend;\n"
+      - "wait-for-it -t 120 db:3306; wait-for-it -t 120 redis_cache:6379; wait-for-it -t 120 redis_queue:6379; export start=`date +%s`; until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".db_host // empty\"` ]] && \\\n  [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".redis_cache // empty\"` ]] && \\\n  [[ -n `grep -hs ^ sites/common_site_config.json | jq -r \".redis_queue // empty\"` ]];\ndo\n  echo \"Waiting for sites/common_site_config.json to be created\";\n  sleep 5;\n  if (( `date +%s`-start > 120 )); then\n    echo \"could not find sites/common_site_config.json with required keys\";\n    exit 1\n  fi\ndone; echo \"sites/common_site_config.json found\"; bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app rental_management  --install-app print_designer --set-default frontend;\n"
     container_name: create-site-hcok8w8wwow4c008o0k8wg4g-055359874727
     restart: unless-stopped
     labels:
@@ -145,13 +145,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
   db:
@@ -181,13 +181,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
     volumes:
@@ -295,13 +295,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
   queue-short:
@@ -341,13 +341,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
   redis-queue:
@@ -381,16 +381,16 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
-  redis-cache:
+  redis_cache:
     image: 'redis:6.2-alpine'
     networks:
       frappe_network: null
@@ -419,13 +419,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
   scheduler:
@@ -463,13 +463,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
   websocket:
@@ -520,13 +520,13 @@ services:
       SERVICE_FQDN_FRONTEND: rentalgenie.srshti.co.in
       SERVICE_NAME_BACKEND: backend
       SERVICE_NAME_CONFIGURATOR: configurator
-      SERVICE_NAME_CREATE_SITE: create-site
+      SERVICE_NAME_CREATE_SITE: create_site
       SERVICE_NAME_DB: db
       SERVICE_NAME_FRONTEND: frontend
-      SERVICE_NAME_QUEUE_LONG: queue-long
-      SERVICE_NAME_QUEUE_SHORT: queue-short
-      SERVICE_NAME_REDIS_QUEUE: redis-queue
-      SERVICE_NAME_REDIS_CACHE: redis-cache
+      SERVICE_NAME_QUEUE_LONG: queue_long
+      SERVICE_NAME_QUEUE_SHORT: queue_short
+      SERVICE_NAME_REDIS_QUEUE: redis_queue
+      SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
 volumes:
