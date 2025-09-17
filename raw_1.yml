@@ -108,7 +108,7 @@ services:
       - coolify.serviceName=ananthcjayan12frappe-dockermain-wg0g4wcwcg4o0okoos40w8ow
       - coolify.environmentName=production
       - coolify.pullRequestId=0
-  create-site:
+  create_site:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-rental:v40'
     networks:
       frappe_network: null
@@ -258,7 +258,7 @@ services:
       - traefik.serversTransport.rental-transport.forwardingTimeouts.dialTimeout=3s
       - traefik.serversTransport.rental-transport.forwardingTimeouts.responseHeaderTimeout=300s
       - traefik.serversTransport.rental-transport.forwardingTimeouts.idleConnTimeout=300s
-  queue-long:
+  queue_long:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-rental:v40'
     networks:
       frappe_network: null
@@ -304,7 +304,7 @@ services:
       SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
-  queue-short:
+  queue_short:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-rental:v40'
     networks:
       frappe_network: null
@@ -350,7 +350,7 @@ services:
       SERVICE_NAME_REDIS_CACHE: redis_cache
       SERVICE_NAME_SCHEDULER: scheduler
       SERVICE_NAME_WEBSOCKET: websocket
-  redis-queue:
+  redis_queue:
     image: 'redis:6.2-alpine'
     networks:
       frappe_network: null
