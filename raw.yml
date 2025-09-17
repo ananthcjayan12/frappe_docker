@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -27,7 +27,7 @@ services:
       MARIADB_ROOT_PASSWORD: admin
 
   configurator:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -56,7 +56,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -111,10 +111,9 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
-      - hcok8w8wwow4c008o0k8wg4g  # attach to Coolify ingress network
     depends_on:
       - websocket
     restart: unless-stopped  # Use this instead of deploy.restart_policy
@@ -151,35 +150,9 @@ services:
       - "8301:8080"
     # Run as root to avoid permission issues
     user: "0:0"
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=hcok8w8wwow4c008o0k8wg4g
-      - traefik.http.middlewares.gzip.compress=true
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-      # HTTP router (redirects to HTTPS)
-      - 'traefik.http.routers.rental.rule=Host(`rentalgenie.srshti.co.in`) && PathPrefix(`/`)'
-      - traefik.http.routers.rental.entrypoints=http
-      - traefik.http.routers.rental.priority=1000
-      - traefik.http.routers.rental.middlewares=gzip,redirect-to-https
-      - traefik.http.routers.rental.service=rental
-      # HTTPS router
-      - 'traefik.http.routers.rental-https.rule=Host(`rentalgenie.srshti.co.in`) && PathPrefix(`/`)'
-      - traefik.http.routers.rental-https.entrypoints=https
-      - traefik.http.routers.rental-https.tls=true
-      - traefik.http.routers.rental-https.priority=1000
-      - traefik.http.routers.rental-https.middlewares=gzip
-      - traefik.http.routers.rental-https.service=rental
-      # Service config
-      - traefik.http.services.rental.loadbalancer.server.port=8080
-      - traefik.http.services.rental.loadbalancer.passHostHeader=true
-      - traefik.http.services.rental.loadbalancer.serversTransport=rental-transport
-      # Timeouts (fail fast on bad upstream, keep long responses ok)
-      - traefik.serversTransport.rental-transport.forwardingTimeouts.dialTimeout=3s
-      - traefik.serversTransport.rental-transport.forwardingTimeouts.responseHeaderTimeout=300s
-      - traefik.serversTransport.rental-transport.forwardingTimeouts.idleConnTimeout=300s
 
   queue-long:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -195,7 +168,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -229,7 +202,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -243,7 +216,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v40
+    image: ghcr.io/ananthcjayan12/frappe-custom-rental:v39
     networks:
       - frappe_network
     deploy:
@@ -274,6 +247,3 @@ volumes:
 networks:
   frappe_network:
     driver: bridge
-  hcok8w8wwow4c008o0k8wg4g:
-    external: true
-    name: hcok8w8wwow4c008o0k8wg4g
