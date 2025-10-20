@@ -32,11 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get latest rentalgenie commit hash
         id: rentalgenie_hash
         run: |
-          RENTALGENIE_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/rentalgenie/commits/v3 | jq -r .sha)
+          RENTALGENIE_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/rentalgenie/commits/v4 | jq -r .sha)
           echo "rentalgenie_hash=${RENTALGENIE_HASH}" >> $GITHUB_OUTPUT
           echo "Latest rentalgenie commit: ${RENTALGENIE_HASH}"
       - name: Encode apps.json
