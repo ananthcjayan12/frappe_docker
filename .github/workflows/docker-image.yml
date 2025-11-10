@@ -22,6 +22,7 @@ on:
     branches:
       - main
       - BR-DOCKER-PUSH-RENTAL
+      - BR-MOBCLINIC-BACKEND
     tags:
       - 'v*'
 
