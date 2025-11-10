@@ -33,12 +33,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Get latest rentalgenie commit hash
-        id: rentalgenie_hash
+      - name: Get latest mobclinic commit hash
+        id: mobclinic_hash
         run: |
-          RENTALGENIE_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/rentalgenie/commits/v4 | jq -r .sha)
-          echo "rentalgenie_hash=${RENTALGENIE_HASH}" >> $GITHUB_OUTPUT
-          echo "Latest rentalgenie commit: ${RENTALGENIE_HASH}"
+          MOBCLINIC_HASH=$(curl -s https://api.github.com/repos/ananthcjayan12/mobclinic/commits/develop | jq -r .sha)
+          echo "mobclinic_hash=${MOBCLINIC_HASH}" >> $GITHUB_OUTPUT
+          echo "Latest mobclinic commit: ${MOBCLINIC_HASH}"
       - name: Encode apps.json
         id: encode_apps
         run: |
@@ -57,21 +57,21 @@ jobs:
           password: ${{ secrets.CR_PAT }}
       - name: Pull cache image if available
         run: |
-          docker pull ghcr.io/ananthcjayan12/frappe-custom-rental:${{ env.IMAGE_TAG }} || echo "No cache image found"
+          docker pull ghcr.io/ananthcjayan12/frappe-custom-mobclinic:${{ env.IMAGE_TAG }} || echo "No cache image found"
 
       - name: Build and push Docker image
         run: |
           docker build \
             --file images/layered/Containerfile \
-            --cache-from ghcr.io/ananthcjayan12/frappe-custom-rental:${{ env.IMAGE_TAG }} \
-            --build-arg CACHEBUST=${{ github.run_id }}-${{ steps.rentalgenie_hash.outputs.rentalgenie_hash }} \
+            --cache-from ghcr.io/ananthcjayan12/frappe-custom-mobclinic:${{ env.IMAGE_TAG }} \
+            --build-arg CACHEBUST=${{ github.run_id }}-${{ steps.mobclinic_hash.outputs.mobclinic_hash }} \
             --build-arg FRAPPE_PATH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_path || 'https://github.com/frappe/frappe' }} \
             --build-arg FRAPPE_BRANCH=${{ github.event_name == 'workflow_dispatch' && inputs.frappe_branch || 'version-15' }} \
             --build-arg APPS_JSON_BASE64="${{ steps.encode_apps.outputs.apps_json_base64 }}" \
-            --tag ghcr.io/ananthcjayan12/frappe-custom-rental:${{ env.IMAGE_TAG }} \
+            --tag ghcr.io/ananthcjayan12/frappe-custom-mobclinic:${{ env.IMAGE_TAG }} \
             .
 
-          docker push ghcr.io/ananthcjayan12/frappe-custom-rental:${{ env.IMAGE_TAG }}
+          docker push ghcr.io/ananthcjayan12/frappe-custom-mobclinic:${{ env.IMAGE_TAG }}
       - name: Commit pwd.yml update
         env:
           BRANCH_NAME: ${{ github.ref_name }}
