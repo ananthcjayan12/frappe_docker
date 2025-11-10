@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -27,7 +27,7 @@ services:
       MARIADB_ROOT_PASSWORD: admin
 
   configurator:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -56,7 +56,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -86,7 +86,7 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app healthcare --install-app mobclinic --install-app payments --install-app print_designer --set-default frontend;
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app healthcare --install-app mob_clinic --install-app payments --install-app print_designer --set-default frontend;
 
   db:
     image: mariadb:10.6
@@ -111,7 +111,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     depends_on:
@@ -152,7 +152,7 @@ services:
     user: "0:0"
 
   queue-long:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -168,7 +168,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -202,7 +202,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
@@ -216,7 +216,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v52
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v53
     networks:
       - frappe_network
     deploy:
