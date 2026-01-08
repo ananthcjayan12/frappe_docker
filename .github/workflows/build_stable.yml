@@ -26,6 +26,7 @@ on:
 
   # Triggered from frappe/frappe and frappe/erpnext on releases
   repository_dispatch:
+    types: [frappe-release, erpnext-release]
 
   workflow_dispatch:
 
