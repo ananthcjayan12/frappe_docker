@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -27,7 +27,7 @@ services:
       MARIADB_ROOT_PASSWORD: admin
 
   configurator:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -56,7 +56,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -111,7 +111,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     depends_on:
@@ -152,7 +152,7 @@ services:
     user: "0:0"
 
   queue-long:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -168,7 +168,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -202,7 +202,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
@@ -216,7 +216,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v70
+    image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:v71
     networks:
       - frappe_network
     deploy:
