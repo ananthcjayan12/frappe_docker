@@ -4,6 +4,8 @@ permissions:
   packages: write
 
 on:
+  repository_dispatch:
+    types: [trigger-build]
   workflow_dispatch:
     inputs:
       frappe_path:
@@ -34,6 +36,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'repository_dispatch' && 'BR-MOBCLINIC-BACKEND' || github.ref }}
       - name: Get latest mobclinic commit hash
         id: mobclinic_hash
         run: |
@@ -75,11 +79,11 @@ jobs:
           docker push ghcr.io/ananthcjayan12/frappe-custom-mobclinic:${{ env.IMAGE_TAG }}
       - name: Commit pwd.yml update
         env:
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ github.event_name == 'repository_dispatch' && 'BR-MOBCLINIC-BACKEND' || github.ref_name }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          sed -i "s/\${IMAGE_TAG}/${IMAGE_TAG}/g" pwd.yml
+          sed -i -E "s|(ghcr.io/ananthcjayan12/frappe-custom-mobclinic:)v[0-9]+|\1${IMAGE_TAG}|g" pwd.yml
           git add pwd.yml
           git commit -m "ci: update pwd.yml to ${IMAGE_TAG}" || echo "No changes to commit"
           git pull --rebase origin ${BRANCH_NAME}
