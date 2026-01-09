@@ -87,4 +87,13 @@ jobs:
           git add pwd.yml
           git commit -m "ci: update pwd.yml to ${IMAGE_TAG}" || echo "No changes to commit"
           git pull --rebase origin ${BRANCH_NAME}
-          git push origin ${BRANCH_NAME} 
+          git push origin ${BRANCH_NAME}
+
+      - name: Trigger Coolify Redeploy (API)
+        if: success()
+        run: |
+          echo "🚀 Triggering Coolify deployment..."
+          curl --request GET \
+            --url "${{ secrets.COOLIFY_URL }}/api/v1/deploy?uuid=${{ secrets.COOLIFY_RESOURCE_UUID }}&force=false" \
+            --header "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
+          echo "✅ Deployment triggered!" 
