@@ -4,27 +4,35 @@ services:
   # 1. API GATEWAY (Nginx)
   # Even though your React App is on Cloudflare, you NEED this.
   # It routes API requests (https://staging-api.../api/...) to the Backend.
+ # 1. API GATEWAY (Nginx)
   frontend:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: unless-stopped
     command:
       - nginx-entrypoint.sh
     environment:
       BACKEND: 'backend:8000'
-      # CRITICAL: This must match the domain you set in Coolify for this service
+      # CRITICAL: If you access via IP, set this to the IP. If domain, set domain.
       FRAPPE_SITE_NAME_HEADER: staging.dentcharts.com
       SOCKETIO: 'websocket:9000'
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       CLIENT_MAX_BODY_SIZE: 50m
     volumes:
       - 'sites:/home/frappe/frappe-bench/sites'
+      # OPTIONAL: Add these if you see permission errors or Nginx PID errors
+      - type: tmpfs
+        target: /run
+        tmpfs:
+          size: 100m
+      - type: tmpfs
+        target: /var/cache/nginx
+        tmpfs:
+          size: 100m
     depends_on:
       - backend
       - websocket
     ports:
-      - '8080' # Coolify will expose this to the internet
+      - '8305:8080' # <--- EXPOSED HERE
 
   # 2. APPLICATION SERVER (Gunicorn)
   backend:
