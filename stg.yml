@@ -7,6 +7,7 @@ services:
  # 1. API GATEWAY (Nginx)
   frontend:
       image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+      pull_policy: always
       restart: unless-stopped
       command:
         - nginx-entrypoint.sh
@@ -38,6 +39,7 @@ services:
   # 2. APPLICATION SERVER (Gunicorn)
   backend:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+    pull_policy: always
     deploy:
       restart_policy:
         condition: on-failure
@@ -56,6 +58,7 @@ services:
   # This ensures your Staging DB is always in sync with your code.
   configurator:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+    pull_policy: always
     deploy:
       restart_policy:
         condition: none
@@ -86,6 +89,7 @@ services:
   # Combines all queues into one process
   worker:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+    pull_policy: always
     deploy:
       restart_policy:
         condition: on-failure
@@ -100,6 +104,7 @@ services:
   # 5. SCHEDULER
   scheduler:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+    pull_policy: always
     deploy:
       restart_policy:
         condition: on-failure
@@ -112,6 +117,7 @@ services:
   # 6. WEBSOCKET
   websocket:
     image: 'ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest'
+    pull_policy: always
     deploy:
       restart_policy:
         condition: on-failure
