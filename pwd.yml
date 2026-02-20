@@ -31,6 +31,7 @@ services:
   configurator:
     image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest
     pull_policy: always
+    restart: "no"
     networks:
       - frappe_network
     deploy:
@@ -61,6 +62,7 @@ services:
   create-site:
     image: ghcr.io/ananthcjayan12/frappe-custom-mobclinic:latest
     pull_policy: always
+    restart: "no"
     networks:
       - frappe_network
     deploy:
