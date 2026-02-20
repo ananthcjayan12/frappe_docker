@@ -16,7 +16,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8000' || exit 1"]
       interval: 30s
-      timeout: 10s
+      timeout: 90s
       retries: 5
       start_period: 120s
     volumes:
@@ -127,7 +127,10 @@ services:
       - frappe_network
     depends_on:
       - websocket
-    restart: unless-stopped  # Use this instead of deploy.restart_policy
+    restart: unless-stopped
+    labels:
+      # Forces Traefik to only route traffic through Coolify's network, preventing the 502/504 errors
+      - "traefik.docker.network=zkkow448088sg8ows48ccwcc"
     command:
       - nginx-entrypoint.sh
     environment:
@@ -150,7 +153,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
-      # Add tmpfs for nginx PID file
       - type: tmpfs
         target: /run
         tmpfs:
@@ -161,7 +163,6 @@ services:
           size: 100m
     ports:
       - "8303:8080"
-    # Run as root to avoid permission issues
     user: "0:0"
 
   queue-long:
