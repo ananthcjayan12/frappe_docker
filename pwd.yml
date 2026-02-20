@@ -14,15 +14,11 @@ services:
         window: 120s
     restart: unless-stopped
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -fsS -H 'Host: frontend' --max-time 5 http://127.0.0.1:8000/api/method/ping || exit 1",
-        ]
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8000' || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 90s
+      retries: 5
+      start_period: 120s
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -242,15 +238,11 @@ services:
         window: 120s
     restart: unless-stopped
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -fsS --max-time 5 'http://127.0.0.1:9000/socket.io/?EIO=4&transport=polling' >/dev/null || exit 1",
-        ]
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9000' || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 90s
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
