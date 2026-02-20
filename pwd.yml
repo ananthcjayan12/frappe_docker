@@ -90,6 +90,10 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
+        if [ -d sites/frontend ] || bench --site frontend list-apps > /dev/null 2>&1; then
+          echo "Site frontend already exists, skipping site creation";
+          exit 0;
+        fi;
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app healthcare --install-app mob_clinic --install-app payments --install-app print_designer --install-app india_compliance --set-default frontend;
 
   db:
