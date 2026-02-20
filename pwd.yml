@@ -12,12 +12,17 @@ services:
         delay: 5s
         max_attempts: 5
         window: 120s
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/method/ping"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS -H 'Host: frontend' --max-time 5 http://127.0.0.1:8000/api/method/ping || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 90s
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -130,7 +135,9 @@ services:
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_CONNECT_TIMEOUT: 120
       PROXY_READ_TIMEOUT: 300
+      PROXY_SEND_TIMEOUT: 300
       CLIENT_MAX_BODY_SIZE: 50m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/api/method/ping"]
@@ -233,12 +240,17 @@ services:
         delay: 5s
         max_attempts: 5
         window: 120s
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/socket.io/"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS --max-time 5 'http://127.0.0.1:9000/socket.io/?EIO=4&transport=polling' >/dev/null || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
